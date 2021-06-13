@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {Value} from './Counter/Value/Value';
 import {Button} from './Counter/Button/Button';
@@ -23,17 +23,33 @@ type inputItemType = {
 }
 
 function App() {
-
     let [startValue, setStartValue] = useState<number>(0)
-    let [disable, setDisable] = useState<boolean>(false)
-    let [maxValue, setMaxValue] = useState<number>(5)
+    let [maxValue, setMaxValue] = useState<number>(1)
+
+    let [disableInc, setDisableInc] = useState<boolean>(false)
+    let [disableReset, setDisableReset] = useState<boolean>(false)
+    let [disableSet, setDisableSet] = useState<boolean>(false)
+
     let [error, setError] = useState<boolean>(false)
+
+    useEffect( () => {
+        let newStartValue = localStorage.getItem('startValue')
+        let newMaxValue = localStorage.getItem('maxValue')
+        if (newStartValue) {
+            // console.log(JSON.parse(newStartValue))
+            setStartValue(JSON.parse(newStartValue))
+        }
+        if (newMaxValue) {
+            // console.log(JSON.parse(newMaxValue))
+            setMaxValue(JSON.parse(newMaxValue))
+        }
+    }, [])
 
 
     // increase or reset button clicks
     function increaseValue() {
         if (startValue === maxValue - 1) {
-            setDisable(true)
+            setDisableInc(true)
         }
         setStartValue(startValue + 1)
 
@@ -41,14 +57,14 @@ function App() {
 
     function resetValue() {
         setStartValue(0)
-        setDisable(false)
+        setDisableInc(false)
     }
 
 
     // Button component items
     const buttonsItem: buttonItemType[] = [
-        {id: v1(), title: 'increase', function: increaseValue, disable: disable},
-        {id: v1(), title: 'reset', function: resetValue, disable: false},
+        {id: v1(), title: 'increase', function: increaseValue, disable: disableInc},
+        {id: v1(), title: 'reset', function: resetValue, disable: disableReset},
     ]
 
     const buttons = buttonsItem.map(b => {
@@ -66,27 +82,37 @@ function App() {
         {id: maxValues, title: 'max value', function: addMaxValue, value: maxValue},
     ]
 
+    function offAllButtons() {
+        setDisableInc(true)
+        setDisableReset(true)
+        setDisableSet(true)
+    }
+
+    function onAllButtons() {
+        setDisableInc(false)
+        setDisableReset(false)
+        setDisableSet(false)
+    }
 
     function addStartValue(value: number) {
+        setStartValue(value)
         setError(false)
         if (value >= maxValue) {
-            setDisable(true)
+            offAllButtons()
             setError(true)
         } else {
-            setStartValue(value)
-            setDisable(false)
+            onAllButtons()
         }
     }
 
     function addMaxValue(value: number) {
-        debugger
+        setMaxValue(value)
         setError(false)
         if (value <= startValue) {
-            setDisable(true)
+            offAllButtons()
             setError(true)
         } else {
-            setMaxValue(value)
-            setDisable(false)
+            onAllButtons()
         }
     }
 
@@ -97,6 +123,11 @@ function App() {
             </div>
         )
     })
+
+    function setToLocalStorage() {
+        localStorage.setItem('startValue', JSON.stringify(startValue))
+        localStorage.setItem('maxValue', JSON.stringify(maxValue))
+    }
 
 
     // UI
@@ -114,7 +145,7 @@ function App() {
             <div className={'block2'}>
                 {inputs}
                 <div>
-                    <button>set</button>
+                    <Button function={setToLocalStorage} disable={disableSet} title={'set'}/>
                 </div>
             </div>
         </div>

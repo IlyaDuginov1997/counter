@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useEffect, useState} from 'react';
 
 
 type InputsPropsType = {
@@ -9,7 +9,6 @@ type InputsPropsType = {
 }
 
 export function Inputs(props: InputsPropsType) {
-
     let [value, setValue] = useState<number>(props.value)
     let [error, setError] = useState<boolean>(false)
 
@@ -23,9 +22,13 @@ export function Inputs(props: InputsPropsType) {
 
         }
     }
+    useEffect(() => {
+        setValue(props.value)
+    }, [props.value])
 
     function removeError() {
         setError(false)
+        setValue(props.value)
     }
 
     function onEnterPresAddValue(e: KeyboardEvent<HTMLInputElement>) {
@@ -34,15 +37,21 @@ export function Inputs(props: InputsPropsType) {
         }
     }
 
+
     return (
         <span>
-            <h5>{props.title}</h5>
-            <input
-                value={value}
-                onChange={changeValue}
-                onBlur={removeError}
-                onKeyPress={onEnterPresAddValue}/>
-            {error && <div className={'error'}>Please, enter a valid value</div>}
+            <span>
+                <h5>{props.title}</h5>
+            </span>
+            <span>
+                <input
+                    value={value}
+                    onChange={changeValue}
+                    onBlur={removeError}
+                    onKeyPress={onEnterPresAddValue}/>
+                {error && <div className={'error'}>Please, enter a valid value</div>}
+            </span>
+
         </span>
 
     )

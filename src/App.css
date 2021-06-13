@@ -6,16 +6,16 @@
 
 .block2 {
     /*display: flex;*/
-    height: 300px;
-    width: 300px;
+    height: 400px;
+    width: 400px;
     margin: 20px;
     background: peru;
 }
 
 .block1 {
     display: flex;
-    height: 300px;
-    width: 300px;
+    height: 400px;
+    width: 400px;
     margin: 20px;
     background: peru;
     flex-direction: column;
