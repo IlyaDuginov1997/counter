@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.block2 {
+    /*display: flex;*/
+    height: 300px;
+    width: 300px;
+    margin: 20px;
+    background: peru;
+}
+
+.block1 {
+    display: flex;
+    height: 300px;
+    width: 300px;
+    margin: 20px;
+    background: peru;
+    flex-direction: column;
+}
+
+
+.bold {
+    color: red;
+}
+
+.error {
+    border: solid 2px red;
+    width: 200px;
+}
